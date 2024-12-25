@@ -61,7 +61,7 @@ tools {
             when { expression {params.selected_environment == 'dev'}
             beforeAgent true }
             agent {label 'DevServer'}
-            steps{
+            steps
                 {
                     dir("/var/www/html")
                     {
