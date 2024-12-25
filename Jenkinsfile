@@ -58,7 +58,7 @@ tools {
 
         stage('deploy_dev')
         {
-            when { expression {params.selected_environment == 'dev'}
+            when { expression {params.select_environment == 'dev'}
             beforeAgent true }
             agent {label 'DevServer'}
             steps{
