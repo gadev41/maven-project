@@ -1,12 +1,11 @@
 pipeline
 {
-    agent {
+agent {
   label 'DevServer'
 }
 tools {
   maven 'maven'
 }
-
     stages 
     {
         stage('Build')
