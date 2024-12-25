@@ -47,12 +47,12 @@ tools {
                 }
             }
             post {
-                success {
-                    dir("webapp/target/")
-                    {
-                     stash name: "maven-build", includes: "*.war"   
+            success {
+                dir("webapp/target/")
+                {
+                stash name: "maven-build", includes: "*.war"   
                     }
-                        }
+                    }
                 }
         }
 
@@ -61,7 +61,8 @@ tools {
             when { expression {params.select_environment == 'dev'}
             beforeAgent true }
             agent {label 'DevServer'}
-            steps{
+            steps
+            {
                 dir("/var/www/html")
                 {
                   unstash "maven-build"
@@ -70,7 +71,7 @@ tools {
                   cd /var/www/html/
                   jar -xvf webapp.war
                   """
-                }
+            }
         }
     }
 }
