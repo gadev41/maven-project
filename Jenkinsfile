@@ -43,10 +43,10 @@ tools {
                 }
             }
         }
-        post {
-        success {
-                archiveArtifacts artifacts: '**/target/*.war'
-                    }
-            }
+            post {
+            success {
+                    archiveArtifacts artifacts: '**/target/*.war'
+                        }
+                }
     }
 }
