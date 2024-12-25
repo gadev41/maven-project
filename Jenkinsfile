@@ -13,9 +13,10 @@ environment {
 tools {
   maven 'maven'
 }
-    stages 
-    {
-        stage('Build')
+stages 
+   { 
+        
+    stage('Build')
         {
             steps 
             {
@@ -26,7 +27,7 @@ tools {
 
         }
 
-        stage('test')
+    stage('Test')
         {
             parallel
             {
@@ -57,7 +58,7 @@ tools {
                     }
                 }
         }    
-        stage('deploy_dev')
+    stage('deploy_dev')
         {
             when { expression {params.select_environment == 'dev'}
             beforeAgent true}
