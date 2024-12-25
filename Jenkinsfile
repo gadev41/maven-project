@@ -42,11 +42,11 @@ tools {
                     }
                 }
             }
-        }
             post {
-            success {
+                success {
                     archiveArtifacts artifacts: '**/target/*.war'
                         }
                 }
+        }
     }
 }
