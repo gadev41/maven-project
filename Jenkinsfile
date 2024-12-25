@@ -25,9 +25,11 @@ tools {
 
 
         }
+
         stage('test')
         {
-            parallel {
+            parallel
+            {
                 stage('testA')
                 {
                     agent {label 'DevServer'}
@@ -41,8 +43,8 @@ tools {
                 {
                     agent {label 'DevServer'}
                     steps{
-                        echo " This is test B"
-                        sh "mvn test"
+                    echo " This is test B"
+                    sh "mvn test"
                     }
                 }
             }
@@ -54,13 +56,14 @@ tools {
                     }
                     }
                 }
+        }    
         stage('deploy_dev')
         {
             when { expression {params.select_environment == 'dev'}
             beforeAgent true}
             agent { label 'DevServer' }
             steps
-                {
+            {
                 dir("/var/www/html")
                 {
                     unstash "maven-build"
@@ -69,9 +72,9 @@ tools {
                 cd /var/www/html/
                 jar -xvf webapp.war
                 """
-                }
             }
         }
     }
 }
+
 
