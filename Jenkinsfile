@@ -4,7 +4,7 @@ pipeline
   label 'DevServer'
 }
 tools {
-  maven 'mymaven'
+  maven 'maven'
 }
 
     stages 
