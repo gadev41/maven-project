@@ -61,18 +61,17 @@ tools {
             when { expression {params.selected_environment == 'dev'}
             beforeAgent true }
             agent {label 'DevServer'}
-            steps
+            steps{
+                dir("/var/www/html")
                 {
-                    dir("/var/www/html")
-                    {
-                        unstash "maven-build"
-                    }
-                    sh """
-                    cd /var/www/html/
-                    jar -xvf webapp.war
-                    """
+                  unstash "maven-build"
                 }
-            }
+                  sh """
+                  cd /var/www/html/
+                  jar -xvf webapp.war
+                  """
+                }
         }
     }
 }
+
