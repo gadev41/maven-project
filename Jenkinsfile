@@ -9,6 +9,7 @@ pipeline {
 
     environment {
         NAME = "gadev"
+        DEPLOY_DIR = "/var/www/html"
     }
     tools {
         maven 'maven'
@@ -49,18 +50,11 @@ pipeline {
                 beforeAgent true 
             }
             steps {
-                script {
-                    // Debugging: Check permissions before unstash
-                    sh '''
-                    echo "Checking permissions for /var/www/html/"
-                    ls -ld /var/www/html || echo "Directory does not exist"
-                    ls -l /var/www/html/webapp.war || echo "WAR file does not exist or cannot be accessed"
-                    '''
-                }
                 dir("/var/www/html") {
                     unstash "maven-build"
                 }
                 sh """
+                sudo chmod -R 775 ${DEPLOY_DIR}
                 cd /var/www/html/
                 if [ -f webapp.war ]; then
                     jar -xvf webapp.war
