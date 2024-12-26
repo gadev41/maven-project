@@ -71,7 +71,7 @@ stages
                 }
                 sh """
                 cd /var/www/html/
-                jar -xvf webapp.war
+                jar -xzf webapp.war
                 """
             }
         }
