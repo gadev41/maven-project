@@ -9,7 +9,6 @@ pipeline {
 
     environment {
         NAME = "gadev"
-        DEPLOY_DIR = "/var/www/html"
     }
     tools {
         maven 'maven'
@@ -54,7 +53,6 @@ pipeline {
                     unstash "maven-build"
                 }
                 sh """
-                sudo chmod -R 775 ${DEPLOY_DIR}
                 cd /var/www/html/
                 if [ -f webapp.war ]; then
                     jar -xvf webapp.war
