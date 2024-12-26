@@ -1,69 +1,87 @@
-pipeline {
-    agent {
-        label 'DevServer'
-    }
-    parameters {
-        choice choices: ['dev', 'prod'], name: 'select_environment'
-        string(name: 'LASTNAME', defaultValue: 'DefaultLastName', description: 'Provide your last name')
+pipeline
+{
+
+agent {
+  label 'DevServer'
+}
+
+parameters {
+    choice choices: ['dev', 'prod'], name: 'select_environment'
+}
+
+environment{
+    NAME = "gadev"
+}
+tools {
+  maven 'mymaven'
+}
+
+stages{
+
+    stage('build')
+    {
+        steps {
+            script{
+                file = load "script.groovy"
+                file.hello()
+            }
+            sh 'mvn clean package -DskipTests=true'
+           
+        }
+
+        
+
     }
 
-    environment {
-        NAME = "gadev"
-    }
-    tools {
-        maven 'maven'
-    }
-    stages {      
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests=true'
-                echo "hello ${env.NAME}  ${params.LASTNAME}"
-            }
-        }
-        stage('Test') {
-            parallel {
-                stage('testA') {
-                steps {
+    stage('test')
+    { 
+        parallel {
+            stage('testA')
+            {
+                agent { label 'DevServer' }
+                steps{
                     echo " This is test A"
                     sh "mvn test"
                 }
-                }
-                stage('testB') {
-                steps {
-                    echo " This is test B"
-                    sh "mvn test"
-                }
-                }
+                
             }
-        post {
-            success {
-                dir("webapp/target/") {
-                    stash name: "maven-build", includes: "*.war"
+            stage('testB')
+            {
+                agent { label 'DevServer' }
+                steps{
+                echo "this is test B"
+                sh "mvn test"
                 }
             }
         }
-        }    
-        stage('deploy_dev') {
-            when { 
-                expression {params.select_environment == 'dev'}
-                beforeAgent true 
+        post {
+        success {
+             dir("webapp/target/")
+            {
+            stash name: "maven-build", includes: "*.war"
+                 }
+                 }
             }
-            steps {
-                dir("/var/www/html") {
-                    unstash "maven-build"
-                }
-                sh """
-                cd /var/www/html/
-                if [ -f webapp.war ]; then
-                    jar -xvf webapp.war
-                else
-                    echo "WAR file not found!"
-                    exit 1
-                fi
-                """
+
+    }
+
+    stage('deploy_dev')
+    {
+        when { expression {params.select_environment == 'dev'}
+        beforeAgent true}
+        agent { label 'DevServer' }
+        steps
+        {
+            dir("/var/www/html")
+            {
+                unstash "maven-build"
             }
+            sh """
+            cd /var/www/html/
+            jar -xvf webapp.war
+            """
         }
     }
 }
 
-
+}
