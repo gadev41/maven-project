@@ -43,7 +43,7 @@ pipeline {
         }    
         stage('deploy_dev') {
             when { 
-                expression {params.select_environment == 'prod'}
+                expression {params.select_environment == 'dev'}
                 beforeAgent true 
             }
             steps {
