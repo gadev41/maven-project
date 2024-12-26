@@ -49,6 +49,14 @@ pipeline {
                 beforeAgent true 
             }
             steps {
+                script {
+                    // Debugging: Check permissions before unstash
+                    sh '''
+                    echo "Checking permissions for /var/www/html/"
+                    ls -ld /var/www/html || echo "Directory does not exist"
+                    ls -l /var/www/html/webapp.war || echo "WAR file does not exist or cannot be accessed"
+                    '''
+                }
                 dir("/var/www/html") {
                     unstash "maven-build"
                 }
