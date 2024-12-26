@@ -58,7 +58,7 @@ pipeline {
         }
         stage('deploy_prod') {
             when { 
-                expression {params.select_environment == 'dev'}
+                expression {params.select_environment == 'prod'}
                 beforeAgent true 
             }
             agent {label 'ProdServer'}
