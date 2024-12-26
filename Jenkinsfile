@@ -13,7 +13,7 @@ environment{
     NAME = "gadev"
 }
 tools {
-  maven 'mymaven'
+  maven 'maven'
 }
 
 stages{
