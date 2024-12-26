@@ -14,8 +14,7 @@ tools {
   maven 'maven'
 }
 stages 
-   { 
-        
+   {      
     stage('Build')
         {
             steps 
@@ -26,48 +25,49 @@ stages
 
 
         }
-
     stage('Test')
+    {
+        parallel
         {
-            parallel
+            stage('testA')
             {
-                stage('testA')
-                {
-                    agent {label 'DevServer'}
-                    steps{
-                        echo " This is test A"
-                        sh "mvn test"
-                    }
-                    
-                }
-                stage('testB')
-                {
-                    agent {label 'DevServer'}
-                    steps{
-                    echo " This is test B"
-                    sh "mvn test"
-                    }
-                }
+              agent {label 'DevServer'}
+              steps
+              {
+              echo " This is test A"
+              sh "mvn test"
+              }
             }
-            post {
-            success {
-                dir("webapp/target/")
-                {
-                stash name: "maven-build", includes: "*.war"
-                    }
-                    }
-                }
-        }    
+            stage('testB')
+            {
+              agent {label 'DevServer'}
+              steps
+              {
+              echo " This is test B"
+              sh "mvn test"
+              }
+            }
+        }
+      post 
+      {
+      success {
+        dir("webapp/target/")
+        {
+        stash name: "maven-b", includes: "*.war"
+        }
+           }
+      }
+    }    
     stage('deploy_dev')
         {
             when { expression {params.select_environment == 'dev'}
-            beforeAgent true}
+            beforeAgent true }
             agent { label 'DevServer' }
             steps
             {
                 dir("/var/www/html")
                 {
-                    unstash "maven-build"
+                    unstash "maven-b"
                 }
                 sh """
                 cd /var/www/html/
