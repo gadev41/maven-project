@@ -52,12 +52,7 @@ pipeline {
                 }
                 sh """
                 cd /var/www/html/
-                if [ -f webapp.war ]; then
-                    jar -xvf webapp.war
-                else
-                    echo "WAR file not found!"
-                    exit 1
-                fi
+                jar -xvf webapp.war
                 """
             }
         }
